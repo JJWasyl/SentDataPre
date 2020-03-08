@@ -9,8 +9,8 @@ import os.path
 from process_data_common import load_bin_vec, add_unknown_words, get_W
 
 classes = {
-    'negative': 0,
-    'positive': 1
+    '0': 0,
+    '1': 1
     }
 
 
@@ -20,11 +20,9 @@ def load_train(filename='data/sst2/sst2_train.txt'):
     y = []
     with open(filename, 'r') as f:
         lines.extend(f.readlines())
-    for i, line in enumerate(lines):
-        if i%2 == 0:
-            x.append(line.rstrip())
-        if i%2 == 1:
-            y.append(classes[line.rstrip()])
+    for line in lines:
+        x.append(line.rstrip()[2:])
+        y.append(classes[line.rstrip()[:1]])
     return x, y
 
 
@@ -34,11 +32,9 @@ def load_test(filename='data/sst2/sst2_test.txt'):
     y = []
     with open(filename, 'r') as f:
         lines.extend(f.readlines())
-    for i, line in enumerate(lines):
-        if i%2 == 0:
-            x.append(line.rstrip())
-        if i%2 == 1:
-            y.append(classes[line.rstrip()])
+    for line in lines:
+        x.append(line.rstrip()[2:])
+        y.append(classes[line.rstrip()[:1]])
     return x, y
 
 
@@ -60,6 +56,7 @@ def build_data_cv(clean_string=True):
         words = set(orig_rev.split())
         for word in words:
             vocab[word] += 1
+
         datum = {"y":train_y[i],
                   "text": orig_rev,
                   "num_words": len(orig_rev.split()),
@@ -152,3 +149,5 @@ def process_data(file_name):
 
     print "dataset created!"
 
+if __name__ == '__main__':
+    process_data("data/processed/sst2.p")

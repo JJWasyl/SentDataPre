@@ -9,8 +9,8 @@ from nltk.tokenize import word_tokenize
     https://github.com/yoonkim/CNN_sentence
 """
 classes = {
-    'negative': 0,
-    'positive': 1
+    '0': 0,
+    '1': 1
     }
 
 def preprocess(text):
@@ -28,17 +28,15 @@ def preprocess(text):
         X.append(result)
     return X
 
-def load_train(filename='sst2_train.txt'):
+def load_train(filename='C:/Users/jjwas/Documents/GitHub/SentDataPre/cnn/data/sst2/sst2_train.txt'):
     lines = []
     x = []
     y = []
     with open(filename, 'r') as f:
         lines.extend(f.readlines())
-    for i, line in enumerate(lines):
-        if i%2 == 0:
-            x.append(line.rstrip())
-        if i%2 == 1:
-            y.append(classes[line.rstrip()])
+    for line in lines:
+        x.append(line.rstrip()[2:])
+        y.append(classes[line.rstrip()[:1]])
             
     for i in xrange(len(y)):
         if i == 0:
@@ -48,17 +46,16 @@ def load_train(filename='sst2_train.txt'):
     return x, Y.reshape(len(y),)
 
 
-def load_test(filename='sst2_test.txt'):
+def load_test(filename='C:/Users/jjwas/Documents/GitHub/SentDataPre/cnn/data/sst2/sst2_test.txt'):
     lines = []
     x = []
     y = []
     with open(filename, 'r') as f:
         lines.extend(f.readlines())
-    for i, line in enumerate(lines):
-        if i%2 == 0:
-            x.append(line.rstrip())
-        if i%2 == 1:
-            y.append(classes[line.rstrip()])
+    for line in lines:
+        x.append(line.rstrip()[2:])
+        y.append(classes[line.rstrip()[:1]])
+
     for i in xrange(len(y)):
         if i == 0:
             Y = y[i]
@@ -200,7 +197,7 @@ def get_W(w2v, ixtoword, k=300):
 
 
 if __name__=="__main__":    
-    w2v_file = 'GoogleNews-vectors-negative300.bin'
+    w2v_file = 'C:/Users/jjwas/Documents/GitHub/SentDataPre/cnn/data/GoogleNews-vectors-negative300.bin'
     
     print "preparing data..."
     
@@ -230,6 +227,5 @@ if __name__=="__main__":
     
     W = get_W(w2v,ixtoword)
     
-    cPickle.dump([train, test, W, ixtoword, wordtoix], open("sst2.p", "wb"))
+    cPickle.dump([train, test, W, ixtoword, wordtoix], open("data/sst2.p", "wb"))
     print "dataset created!"
-    
